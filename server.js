@@ -41,9 +41,12 @@ app.get('/:title', async function (req, res) {
 
   });
   const regex = /app\/\d*/
-  const matched = webLink.match(regex)
-  console.log(matched)
-  res.data = matched
+  const matched = webLink.match(regex).toString()
+  // console.log(matched)
+  const reviewsURL = `https://steamcommunity.com/${matched}/reviews/?browsefilter=toprated&snr=1_5_100010_`
+  console.log(reviewsURL)
+  const {reviewsHtml} = await axios.get(searchURL)
+  res.data = reviewsHtml
 })
 
 app.listen(5000)
