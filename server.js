@@ -24,19 +24,26 @@ app.use(function (req, res, next) {
 
 app.get('/:title', async function (req, res) {
   var gameTitle = req.params.title;
-  var html = await getReviews(gameTitle).then(function (html) {
-    console.log("Promise Resolved");
-    return html
-}).catch(function () {
-    console.log("Promise Rejected");
-});
+  var editedTitle = gameTitle.split(" ").join("+");
+
+  const searchURL = `https://store.steampowered.com/search/?term=${editedTitle}`
+
+  console.log(searchURL)
+
+  const {data} = await axios.get(searchURL)
+
+  // var html = await getReviews(gameTitle)
   // console.log(html)
-  const $ = cheerio.load(html)
-  // console.log($('#search_resultsRows').first());
-  console.log($('div', '<div id=search_resultsRows>...</div>'))
-  // console.log($)
-  // console.log(html)
-  // res.send(html)
+  const $ = cheerio.load(data)
+  var webLink = '';
+  $('div #search_resultsRows').first().find('a').first().each((i, link) => {
+    webLink = link.attribs.href;
+
+  });
+  const regex = /app\/\d*/
+  const matched = webLink.match(regex)
+  console.log(matched)
+  res.data = matched
 })
 
 app.listen(5000)
