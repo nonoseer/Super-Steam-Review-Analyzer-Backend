@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/nonoseer/Super-Steam-Review-Analyzer-Backend#readme",
   "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.6",
     "express": "^4.17.1"
   }
 }

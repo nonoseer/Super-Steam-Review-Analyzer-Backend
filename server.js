@@ -1,8 +1,6 @@
 const express = require('express')
 const axios = require('axios')
 const cheerio = require('cheerio')
-const HTML = ''
-const $ = cheerio.load(HTML)
 const app = express()
 
 const getReviews = async function(gameTitle) {
@@ -23,15 +21,22 @@ app.use(function (req, res, next) {
   next()
 })
 
+
 app.get('/:title', async function (req, res) {
   var gameTitle = req.params.title;
-  var html = await getReviews(gameTitle).then(function () {
+  var html = await getReviews(gameTitle).then(function (html) {
     console.log("Promise Resolved");
+    return html
 }).catch(function () {
     console.log("Promise Rejected");
 });
   // console.log(html)
-  res.send(html)
+  const $ = cheerio.load(html)
+  // console.log($('#search_resultsRows').first());
+  console.log($('div', '<div id=search_resultsRows>...</div>'))
+  // console.log($)
+  // console.log(html)
+  // res.send(html)
 })
 
 app.listen(5000)
