@@ -142,18 +142,32 @@ const stripStopWords = (review) => {
   const words = review.split(" ");
   for (let i = 0; i < words.length; ++i) {
     if (!stopWords.includes(words[i])) {
+      console.log(words[i]);
       arr.push(words[i]);
     }
   }
+  return words;
 };
 
-const transformWords = (reviewArr) => {
+const transformWords = (reviews) => {
   const map = {};
-  for (let i = 0; i < reviewArr.length; ++i) {
-    if (!map.has(reviewArr[i])) {
-      map[reviewArr[i]] = 0;
+  for (let i = 0; i < reviews.length; ++i) {
+    for (let j = 0; j < reviews[i].length; ++j) {
+      if (!map[reviews[i][j]]) {
+        map[reviews[i][j]] = 0;
+      }
+      map[reviews[i][j]] += 1;
     }
-    map[reviewArr[i]] += 1;
   }
   return map;
 };
+
+const parseReviews = (reviews) => {
+  const result = reviews.map((review) => {
+    return stripStopWords(removePunctuation(toLowerCase(review)));
+  });
+  console.log(result);
+  return transformWords(result);
+};
+
+module.exports = parseReviews;
