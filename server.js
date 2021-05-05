@@ -37,11 +37,12 @@ app.get("/:title", async function (req, res) {
   const matched = webLink.match(regex).toString();
   const reviewsURL = `https://steamcommunity.com/${matched}/reviews/?browsefilter=toprated&snr=1_5_100010_`;
 
+  console.log(matched);
   console.log(reviewsURL);
   var reviewsHtml = await axios.get(reviewsURL).then((res) => res.data);
-  for (i = 1; i <= 100; i++) {
+  for (i = 1; i <= 10; i++) {
     const p = i + 1;
-    const pageUrl = `https://steamcommunity.com/app/1158310/homecontent/?userreviewscursor=AoIIP28jV3rJvKAC&userreviewsoffset=${i}0&p=${p}&workshopitemspage=${p}&readytouseitemspage=${p}&mtxitemspage=${p}&itemspage=${p}&screenshotspage=${p}&videospage=${p}&artpage=${p}&allguidepage=${p}&webguidepage=${p}&integratedguidepage=${p}&discussionspage=${p}&numperpage=10&browsefilter=toprated&browsefilter=toprated&l=english&appHubSubSection=10&filterLanguage=default&searchText=&maxInappropriateScore=50&forceanon=1`;
+    const pageUrl = `https://steamcommunity.com/${matched}/homecontent/?userreviewscursor=AoIIP28jV3rJvKAC&userreviewsoffset=${i}0&p=${p}&workshopitemspage=${p}&readytouseitemspage=${p}&mtxitemspage=${p}&itemspage=${p}&screenshotspage=${p}&videospage=${p}&artpage=${p}&allguidepage=${p}&webguidepage=${p}&integratedguidepage=${p}&discussionspage=${p}&numperpage=10&browsefilter=toprated&browsefilter=toprated&l=english&appHubSubSection=10&filterLanguage=default&searchText=&maxInappropriateScore=50&forceanon=1`;
     console.log(`fetching page: ${p}`);
     const pageHtml = await axios.get(pageUrl).then((res) => res.data);
     reviewsHtml = reviewsHtml + pageHtml;
@@ -54,4 +55,3 @@ app.get("/:title", async function (req, res) {
 
 app.listen(5000);
 module.exports = app;
-

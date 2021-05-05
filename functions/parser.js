@@ -175,6 +175,17 @@ const stripStopWords = (review) => {
   return arr;
 };
 
+const transformMap = (map) => {
+  const newMap = [];
+  for (let [key, value] of Object.entries(map)) {
+    newMap.push({
+      text: key,
+      size: value,
+    });
+  }
+  return newMap;
+};
+
 const transformWords = (reviews) => {
   const map = {};
   for (let i = 0; i < reviews.length; ++i) {
@@ -197,7 +208,7 @@ const parseReviews = (reviews) => {
     return stripStopWords(removePunctuation(toLowerCase(review)));
   });
   console.log(result);
-  return transformWords(result);
+  return transformMap(transformWords(result));
 };
 
 module.exports = { parseReviews, getReviews };
