@@ -1,4 +1,4 @@
-const parseReviews = require("./parser");
+const { parseReviews, getReviews } = require("./parser");
 
 const testReviews = [
   "Hello, I just wanted to say that this game is a flaming pile of TRASH",

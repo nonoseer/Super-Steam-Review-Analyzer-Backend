@@ -1,7 +1,26 @@
+const cheerio = require("cheerio");
+
+const getReviews = async (data) => {
+  const $ = await cheerio.load(data);
+
+  const reviews = [];
+
+  $(".apphub_CardTextContent").each((i, el) => {
+    var review = $(el)
+      .text()
+      .substring(40)
+      .replace("Product received for free", "")
+      .trimStart();
+    reviews.push(review);
+  });
+
+  return reviews;
+};
 const removePunctuation = (review) => {
   const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
-  const newReview = review.replace(regex, "");
-  return newReview;
+  const newReview = review.replace(regex, " ");
+
+  return newReview.replace("\t", "");
 };
 
 const toLowerCase = (review) => {
@@ -11,6 +30,7 @@ const toLowerCase = (review) => {
 const stripStopWords = (review) => {
   const stopWords = [
     "i",
+    "m",
     "me",
     "my",
     "myself",
@@ -137,28 +157,38 @@ const stripStopWords = (review) => {
     "don",
     "should",
     "now",
+    "ve",
   ];
   const arr = [];
   const words = review.split(" ");
   for (let i = 0; i < words.length; ++i) {
+    if (!words[i]) {
+      continue;
+    }
+    if (/\d/.test(words[i])) {
+      continue;
+    }
     if (!stopWords.includes(words[i])) {
-      console.log(words[i]);
       arr.push(words[i]);
     }
   }
-  return words;
+  return arr;
 };
 
 const transformWords = (reviews) => {
   const map = {};
   for (let i = 0; i < reviews.length; ++i) {
     for (let j = 0; j < reviews[i].length; ++j) {
+      if (reviews[i][j].length <= 1) {
+        continue;
+      }
       if (!map[reviews[i][j]]) {
         map[reviews[i][j]] = 0;
       }
       map[reviews[i][j]] += 1;
     }
   }
+  console.log(map[" "]);
   return map;
 };
 
@@ -170,4 +200,4 @@ const parseReviews = (reviews) => {
   return transformWords(result);
 };
 
-module.exports = parseReviews;
+module.exports = { parseReviews, getReviews };
